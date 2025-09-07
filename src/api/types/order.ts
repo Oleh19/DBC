@@ -1,3 +1,3 @@
-import ordersData from '../mocks/orders.json';
+import ordersData from '@/api/mocks/orders.json';
 
-export type Order = typeof ordersData[number];
+export type Order = (typeof ordersData)[number];

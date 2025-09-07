@@ -1,0 +1,43 @@
+.orderCard {
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  padding: 1rem;
+  font-family: var(--font-base);
+  color: var(--main-text);
+  transition: box-shadow 0.2s ease;
+}
+
+.orderCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
+}
+
+.orderNumber {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.orderDate {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.orderBody {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.orderBody strong {
+  color: var(--main-text);
+}

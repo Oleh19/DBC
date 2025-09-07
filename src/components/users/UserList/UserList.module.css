@@ -1,0 +1,29 @@
+.userList {
+  padding: 16px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.genderSelect {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+}

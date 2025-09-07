@@ -1,69 +1,43 @@
-# React + TypeScript + Vite
+## How to Run the Application
+### Install dependencies
+npm install
+npm run dev
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Third-Party Libraries Used
 
-Currently, two official plugins are available:
+### react-window
+Purpose: Virtualization of long lists and optimization of their rendering.
+Justification: Allows rendering only the visible part of the order list, significantly improving performance when working with a large number of items. Used to implement “infinite” scrolling and smooth list display without lags.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### ESLint and Prettier
+Used to maintain a consistent code style, automatically check code quality, and organize imports correctly. They ensure clean and readable code, simplify collaborative development, and make project maintenance easier.
 
-## Expanding the ESLint configuration
+## Order Display Logic
+The project implements the following logic for displaying user orders:
+Since there is no linking field between users and orders, it was decided to display orders based on the user’s gender:
+For women (gender === 'Female'), the last 3 orders are shown.
+For men, the first 3 orders are shown.
+This logic was chosen to demonstrate filtering and order display functionality even in the absence of an explicit link between orders and users.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Added Lazy Loading for Orders
+Implemented lazy loading of user orders in UserDetails.
+Orders are now displayed in chunks (default 3 orders per chunk).
+Users can click "Load More" to fetch the next chunk of orders.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Reason for Not Using a State Manager
+No separate state manager (e.g., Redux or Zustand) is used in this project because:
+ - The data is simple and limited to a list of users and orders.
+ - All filtering and display logic is handled locally within components.
+ - Adding a state manager would not provide significant benefits and would only complicate the project structure.
+ - This approach keeps the project lightweight and easy to understand for a test assignment.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Reason for Not Using React Router
+React Router is not used because:
+ - The application is a small test project with minimal navigation.
+ - Navigation is handled simply via component state (e.g., selecting a user and going back), so a full routing library is unnecessary.
+ - Avoiding React Router reduces complexity and keeps the codebase straightforward for demonstration purposes.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+## Limitations
+The project does not implement persistence of user selection or filters on page reload.
+All selected users and applied filters are reset when the page is refreshed.
+Reason: the test task did not require maintaining state between reloads, so I decided not to complicate the implementation and focus on demonstrating the functionality of components and the filtering logic.

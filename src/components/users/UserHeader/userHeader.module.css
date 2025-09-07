@@ -1,0 +1,25 @@
+.userHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-base);
+}
+
+.userHeader h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--main-text);
+}
+
+.userHeader p {
+  margin: 4px 0 0 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.userHeader div {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,49 @@
+.btn {
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-base);
+  transition: background-color 0.2s;
+}
+
+.btn.primary {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+}
+
+.btn.primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn.secondary {
+  background-color: var(--color-secondary);
+  color: var(--main-text);
+}
+
+.btn.secondary:hover {
+  background-color: var(--color-secondary-hover);
+}
+
+.btn.danger {
+  background-color: var(--color-danger);
+  color: var(--color-bg);
+}
+
+.btn.danger:hover {
+  background-color: var(--color-danger-hover);
+}
+
+.btn.sm {
+  padding: 4px 8px;
+  font-size: 0.875rem;
+}
+
+.btn.md {
+  padding: 8px 16px;
+  font-size: 1rem;
+}
+
+.btn.lg {
+  padding: 12px 24px;
+  font-size: 1.125rem;
+}
