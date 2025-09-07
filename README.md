@@ -47,3 +47,7 @@ Reason: the test task did not require maintaining state between reloads, so I de
 
 ### Testing
 Unit tests are not yet implemented due to limited time (only a few hours were allocated for this task).
+
+### Design
+The UI uses a simple and minimalistic design.
+Since the task didn’t provide any design mockups, a basic layout was implemented to keep the focus on functionality and not overcomplicate the solution.
