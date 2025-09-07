@@ -19,10 +19,10 @@
   overflow: hidden;
 }
 
-.listContainer>div {
+.listContainer > div {
   scrollbar-width: none;
 }
 
-.listContainer>div::-webkit-scrollbar {
+.listContainer > div::-webkit-scrollbar {
   display: none;
 }

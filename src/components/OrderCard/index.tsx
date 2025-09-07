@@ -1,6 +1,6 @@
 import type { Order } from '@/api';
 import { type FC } from 'react';
-import styles from './orderCard.module.css'
+import styles from './orderCard.module.css';
 
 interface OrderCardProps {
   order: Order;

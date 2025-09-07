@@ -1,4 +1,5 @@
-import { useMemo, useState, type FC, type ReactNode } from 'react';
+import { useCallback, useMemo, useState, type FC, type ReactNode } from 'react';
+import { toast } from 'react-toastify';
 import { List, type RowComponentProps } from 'react-window';
 
 import type { Customer } from '@/api';
@@ -23,44 +24,60 @@ const Dashboard: FC<DashboardProps> = ({ users, onUserClick }) => {
   const [stateFilter, setStateFilter] = useState<string | null>(null);
   const [nameFilter, setNameFilter] = useState<string>('');
 
-  const postCodeMin = useMemo(
+  const [loadedItems, setLoadedItems] = useState(PAGE_SIZE);
+
+  const minPostCode = useMemo(
     () => Math.min(...users.map((u) => Number(u.postCode) || 0)),
     [users],
   );
-  const postCodeMax = useMemo(
+  const maxPostCode = useMemo(
     () => Math.max(...users.map((u) => Number(u.postCode) || 99999)),
     [users],
   );
-  const [postCodeRange, setPostCodeRange] = useState<[number, number]>([postCodeMin, postCodeMax]);
+  const [postCodeRange, setPostCodeRange] = useState<[number, number]>([minPostCode, maxPostCode]);
 
-  const [loadedItems, setLoadedItems] = useState(PAGE_SIZE);
+  const handleFilterChange = useCallback(() => {
+    setLoadedItems(PAGE_SIZE);
+  }, []);
 
-  const handleFilterChange = () => setLoadedItems(PAGE_SIZE);
-
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     setGenderFilter(null);
     setCountryFilter(null);
     setStateFilter(null);
     setNameFilter('');
-    setPostCodeRange([postCodeMin, postCodeMax]);
+    setPostCodeRange([minPostCode, maxPostCode]);
     setLoadedItems(PAGE_SIZE);
-  };
+  }, [minPostCode, maxPostCode]);
+
+  const fetchMoreData = useCallback(() => {
+    try {
+      setLoadedItems((prev) => Math.min(prev + PAGE_SIZE, filteredUsers.length));
+    } catch (err) {
+      console.error(err);
+      toast.error('Error loading more users');
+    }
+  }, []);
 
   const filteredUsers = useMemo(() => {
-    return users.filter((user) => {
-      const genderMatch = genderFilter ? user.gender === genderFilter : true;
-      const countryMatch = countryFilter ? user.country === countryFilter : true;
-      const stateMatch = stateFilter ? user.state === stateFilter : true;
+    try {
+      return users.filter((user) => {
+        const genderMatch = !genderFilter || user.gender === genderFilter;
+        const countryMatch = !countryFilter || user.country === countryFilter;
+        const stateMatch = !stateFilter || user.state === stateFilter;
 
-      const postCodeNum = Number(user.postCode);
-      const postCodeMatch = postCodeNum >= postCodeRange[0] && postCodeNum <= postCodeRange[1];
+        const postCodeNum = Number(user.postCode);
+        const postCodeMatch = postCodeNum >= postCodeRange[0] && postCodeNum <= postCodeRange[1];
 
-      const nameMatch = nameFilter
-        ? user.firstName.toLowerCase().includes(nameFilter.toLowerCase())
-        : true;
+        const nameMatch =
+          !nameFilter || user.firstName.toLowerCase().includes(nameFilter.toLowerCase());
 
-      return genderMatch && countryMatch && stateMatch && postCodeMatch && nameMatch;
-    });
+        return genderMatch && countryMatch && stateMatch && postCodeMatch && nameMatch;
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Error filtering users');
+      return [];
+    }
   }, [users, genderFilter, countryFilter, stateFilter, postCodeRange, nameFilter]);
 
   const availableStates = useMemo(() => {
@@ -68,24 +85,23 @@ const Dashboard: FC<DashboardProps> = ({ users, onUserClick }) => {
     return Array.from(new Set(base.map((u) => u.state)));
   }, [users, countryFilter]);
 
-  const fetchMoreData = () => {
-    setLoadedItems((prev) => Math.min(prev + PAGE_SIZE, filteredUsers.length));
-  };
+  const Row = useCallback(
+    ({ index, style, ...props }: RowComponentProps<RowProps>): ReactNode => {
+      const user = props.filteredUsers[index];
+      if (!user) return null;
 
-  const Row = ({ index, style, ...props }: RowComponentProps<RowProps>): ReactNode => {
-    const user = props.filteredUsers[index];
-    if (!user) return null;
-
-    return (
-      <div style={style}>
-        <UserCard
-          key={`${user.email}-${user.firstName}-${user.lastName}`}
-          user={user}
-          onClick={() => onUserClick(user)}
-        />
-      </div>
-    );
-  };
+      return (
+        <div style={style}>
+          <UserCard
+            key={`${user.email}-${user.firstName}-${user.lastName}`}
+            user={user}
+            onClick={() => onUserClick(user)}
+          />
+        </div>
+      );
+    },
+    [onUserClick],
+  );
 
   return (
     <div className={styles.dashboard}>
@@ -137,22 +153,22 @@ const Dashboard: FC<DashboardProps> = ({ users, onUserClick }) => {
           disabled={availableStates.length === 0}
         />
 
-          <RangeFilter
-            label="Post Code"
-            min={postCodeMin}
-            max={postCodeMax}
-            value={postCodeRange}
-            width={200}
-            onChange={(val) => {
-              setPostCodeRange(val);
-              handleFilterChange();
-            }}
-          />
+        <RangeFilter
+          label="Post Code"
+          min={minPostCode}
+          max={maxPostCode}
+          value={postCodeRange}
+          width={200}
+          onChange={(val) => {
+            setPostCodeRange(val);
+            handleFilterChange();
+          }}
+        />
 
-          <Button width="200px" onClick={resetFilters}>
-            Reset Filters
-          </Button>
-        </div>
+        <Button width="200px" onClick={resetFilters}>
+          Reset Filters
+        </Button>
+      </div>
 
       <div className={styles.listContainer}>
         {filteredUsers.length === 0 ? (

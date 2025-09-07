@@ -1,7 +1,8 @@
 import type { Customer, Order } from '@/api';
 import { OrderList, UserHeader } from '@/components';
 import { Button } from '@/components/ui';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import styles from './userDetails.module.css';
 
 interface UserPageProps {
@@ -14,24 +15,39 @@ interface UserPageProps {
 const UserDetails = ({ user, orders, chunkSize = 3, onBack }: UserPageProps) => {
   const [displayedOrders, setDisplayedOrders] = useState<Order[]>([]);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    setDisplayedOrders(orders.slice(0, chunkSize));
-    setHasMore(orders.length > chunkSize);
+  const hasMore = displayedOrders.length < orders.length;
+
+  const initializeOrders = useCallback(() => {
+    try {
+      const initial = orders.slice(0, chunkSize);
+      setDisplayedOrders(initial);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load orders');
+    }
   }, [orders, chunkSize]);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (!hasMore) return;
     setLoadingMore(true);
 
     setTimeout(() => {
-      const nextOrders = orders.slice(displayedOrders.length, displayedOrders.length + chunkSize);
-      setDisplayedOrders((prev) => [...prev, ...nextOrders]);
-      setHasMore(displayedOrders.length + nextOrders.length < orders.length);
-      setLoadingMore(false);
+      try {
+        const nextOrders = orders.slice(displayedOrders.length, displayedOrders.length + chunkSize);
+        setDisplayedOrders((prev) => [...prev, ...nextOrders]);
+      } catch (err) {
+        console.error(err);
+        toast.error('Failed to load more orders');
+      } finally {
+        setLoadingMore(false);
+      }
     }, 500);
-  };
+  }, [orders, chunkSize, displayedOrders.length, hasMore]);
+
+  useEffect(() => {
+    initializeOrders();
+  }, [initializeOrders]);
 
   return (
     <div className={styles.userPage}>

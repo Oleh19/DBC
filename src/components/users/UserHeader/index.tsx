@@ -1,7 +1,7 @@
 import type { Customer } from '@/api';
 import { Avatar } from '@/components/ui';
 import { type FC } from 'react';
-import styles from './userHeader.module.css'
+import styles from './userHeader.module.css';
 
 interface UserHeaderProps {
   user: Customer;

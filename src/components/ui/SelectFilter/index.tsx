@@ -14,14 +14,14 @@ const SelectFilter: FC<SelectFilterProps> = ({
   options,
   placeholder,
   disabled,
-  width = '100%', 
+  width = '100%',
   onChange,
 }) => (
   <select
     value={value || ''}
     onChange={(e) => onChange(e.target.value || null)}
     disabled={disabled}
-    style={{ width }}
+    style={{ width, cursor: disabled ? 'not-allowed' : 'pointer' }}
   >
     <option value="">{placeholder || 'All'}</option>
     {options.map((opt) => (
