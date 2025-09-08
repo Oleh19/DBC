@@ -1,4 +1,4 @@
-import type { Customer } from '@/api/types/customer';
+import type { Customer } from '@/api';
 import { Avatar } from '@/components/ui';
 import { type FC } from 'react';
 import styles from './UserCard.module.css';

@@ -20,6 +20,7 @@ const UserHeader: FC<UserHeaderProps> = ({ user }) => {
           {user.street} {user.streetNumber}, {user.city}, {user.state}, {user.country},{' '}
           {user.postCode}
         </p>
+        <p>Gender: {user.gender}</p>
       </div>
     </header>
   );

@@ -15,6 +15,19 @@ Used to maintain a consistent code style, automatically check code quality, and 
 Implemented friendly error messages using react-toastify.
 This eliminates the need to manually handle UI messages for errors.
 
+## Testing Libraries Used
+### Jest
+Purpose: Main testing framework for running unit tests.  
+Justification: Provides a fast and simple environment for testing TypeScript and React code.
+
+### identity-obj-proxy
+Purpose: Mock CSS modules in tests.  
+Justification: Prevents Jest from failing on imports of `.module.css` files, allowing component tests to run smoothly.
+
+### jest-environment-jsdom
+Purpose: Simulate a browser environment for tests.  
+Justification: Required for testing React components that interact with the DOM.
+
 ## Order Display Logic
 The project implements the following logic for displaying user orders:
 Since there is no linking field between users and orders, it was decided to display orders based on the user’s gender:
@@ -44,9 +57,6 @@ React Router is not used because:
 The project does not implement persistence of user selection or filters on page reload.
 All selected users and applied filters are reset when the page is refreshed.
 Reason: the test task did not require maintaining state between reloads, so I decided not to complicate the implementation and focus on demonstrating the functionality of components and the filtering logic.
-
-### Testing
-Unit tests are not yet implemented due to limited time (only a few hours were allocated for this task).
 
 ### Design
 The UI uses a simple and minimalistic design.

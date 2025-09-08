@@ -1,4 +1,4 @@
-import type { Customer } from '@/api/types/customer';
+import type { Customer } from '@/api';
 import UserCard from '@/components/users/UserCard';
 import { useMemo, useState, type FC } from 'react';
 import styles from './UserList.module.css';

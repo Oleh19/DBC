@@ -85,6 +85,10 @@ const Dashboard: FC<DashboardProps> = ({ users, onUserClick }) => {
     return Array.from(new Set(base.map((u) => u.state)));
   }, [users, countryFilter]);
 
+  const genderOptions = useMemo(() => {
+    return Array.from(new Set(users.map((u) => u.gender))).sort();
+  }, [users]);
+
   const Row = useCallback(
     ({ index, style, ...props }: RowComponentProps<RowProps>): ReactNode => {
       const user = props.filteredUsers[index];
@@ -120,7 +124,7 @@ const Dashboard: FC<DashboardProps> = ({ users, onUserClick }) => {
 
         <SelectFilter
           value={genderFilter}
-          options={['Male', 'Female', 'Other']}
+          options={genderOptions}
           placeholder="All Genders"
           width={200}
           onChange={(val) => {
