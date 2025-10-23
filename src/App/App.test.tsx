@@ -1,5 +1,5 @@
 import { createMockCustomer, createMockOrders } from '@/__mocks__/testData';
-import { getUserOrders } from './utils/orderUtils';
+import { getUserOrders } from '@/utils/orderUtils';
 
 describe('getUserOrders', () => {
   const mockOrders = createMockOrders(50);

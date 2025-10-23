@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { List, type RowComponentProps } from 'react-window';
 
 import type { Customer } from '@/api';
+import { customers } from '@/api';
 import { UserCard } from '@/components';
 import { Button, RangeFilter, SelectFilter, TextFilter } from '@/components/ui';
 
@@ -10,7 +11,6 @@ import { PAGE_SIZE, ROW_HEIGHT } from './constants';
 import styles from './dashboard.module.css';
 
 interface DashboardProps {
-  users: Customer[];
   onUserClick: (user: Customer) => void;
 }
 
@@ -18,7 +18,8 @@ interface RowProps {
   filteredUsers: Customer[];
 }
 
-const Dashboard: FC<DashboardProps> = ({ users, onUserClick }) => {
+const Dashboard: FC<DashboardProps> = ({ onUserClick }) => {
+  const users = customers;
   const [genderFilter, setGenderFilter] = useState<string | null>(null);
   const [countryFilter, setCountryFilter] = useState<string | null>(null);
   const [stateFilter, setStateFilter] = useState<string | null>(null);

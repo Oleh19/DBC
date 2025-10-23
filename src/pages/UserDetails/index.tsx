@@ -1,32 +1,34 @@
 import type { Customer, Order } from '@/api';
+import { orders } from '@/api';
 import { OrderList, UserHeader } from '@/components';
 import { Button } from '@/components/ui';
+import { getUserOrders } from '@/utils/orderUtils';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from './userDetails.module.css';
 
 interface UserPageProps {
   user: Customer;
-  orders: Order[];
   chunkSize?: number;
   onBack: () => void;
 }
 
-const UserDetails = ({ user, orders, chunkSize = 3, onBack }: UserPageProps) => {
+const UserDetails = ({ user, chunkSize = 3, onBack }: UserPageProps) => {
+  const userOrders = getUserOrders(user, orders);
   const [displayedOrders, setDisplayedOrders] = useState<Order[]>([]);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const hasMore = displayedOrders.length < orders.length;
+  const hasMore = displayedOrders.length < userOrders.length;
 
   const initializeOrders = useCallback(() => {
     try {
-      const initial = orders.slice(0, chunkSize);
+      const initial = userOrders.slice(0, chunkSize);
       setDisplayedOrders(initial);
     } catch (err) {
       console.error(err);
       toast.error('Failed to load orders');
     }
-  }, [orders, chunkSize]);
+  }, [userOrders, chunkSize]);
 
   const loadMore = useCallback(() => {
     if (!hasMore) return;
@@ -34,7 +36,7 @@ const UserDetails = ({ user, orders, chunkSize = 3, onBack }: UserPageProps) => 
 
     setTimeout(() => {
       try {
-        const nextOrders = orders.slice(displayedOrders.length, displayedOrders.length + chunkSize);
+        const nextOrders = userOrders.slice(displayedOrders.length, displayedOrders.length + chunkSize);
         setDisplayedOrders((prev) => [...prev, ...nextOrders]);
       } catch (err) {
         console.error(err);
@@ -43,7 +45,7 @@ const UserDetails = ({ user, orders, chunkSize = 3, onBack }: UserPageProps) => 
         setLoadingMore(false);
       }
     }, 500);
-  }, [orders, chunkSize, displayedOrders.length, hasMore]);
+  }, [userOrders, chunkSize, displayedOrders.length, hasMore]);
 
   useEffect(() => {
     initializeOrders();
